@@ -451,27 +451,7 @@ app.get('/scrape', async (req, res) => {
   }
 });
 
-function isValidUrl(url) {
-  try {
-    // Add "https://" if missing
-    const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
-    const urlObject = new URL(formattedUrl);
-
-    // Check if the hostname is present
-    const isValidDomain = !!urlObject.hostname;
-
-    // Check if the path is valid, allowing for no path, or a path with optional filename
-    const hasValidPath = /^\/?[a-zA-Z0-9-]+\/?(\.html)?$/.test(urlObject.pathname);
-
-    if (isValidDomain && hasValidPath) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    return false;
-  }
-}
+ 
 
 
 function extractHeadings($) {
