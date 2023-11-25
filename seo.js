@@ -457,9 +457,11 @@ function isValidUrl(url) {
     const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
     const urlObject = new URL(formattedUrl);
 
-    // Check if the hostname is present and has a valid path
+    // Check if the hostname is present
     const isValidDomain = !!urlObject.hostname;
-    const hasValidPath = /^(\/[a-zA-Z0-9-]+)*\/?$/.test(urlObject.pathname);
+
+    // Check if the path is valid, allowing for no path, or a path with optional filename
+    const hasValidPath = /^\/?[a-zA-Z0-9-]+\/?(\.html)?$/.test(urlObject.pathname);
 
     if (isValidDomain && hasValidPath) {
       return true;
