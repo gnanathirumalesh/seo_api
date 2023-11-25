@@ -492,8 +492,6 @@ app.get('/scrape', async (req, res) => {
       list: $('a[href*="facebook.com"], a[href*="twitter.com"], a[href*="linkedin.com"]').toArray().map((element) => $(element).attr('href'))
     };
 
-    // Check if the website uses HTTPS
-    const isHTTPS = url.startsWith('https://');
 
     // Extract schema markup code
     const schemaMarkup = {
