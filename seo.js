@@ -369,6 +369,13 @@ app.get('/scrape', async (req, res) => {
     const html = response.data;
     const $ = cheerio.load(html);
 
+     // Extract the domain from the URL
+    const parsedUrl = new URL(url);
+    const domain = parsedUrl.hostname;
+
+    // Check if the website uses HTTPS
+    const isHTTPS = parsedUrl.protocol === 'https:' || parsedUrl.protocol === 'https:';
+
     // Extract data from the website
     const pageTitle = $('title').text();
     const titleLength = pageTitle.length;
