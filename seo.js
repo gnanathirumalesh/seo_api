@@ -453,13 +453,14 @@ app.get('/scrape', async (req, res) => {
 
 function isValidUrl(url) {
   try {
-    new URL(url);
+    // Add "https://" if missing
+    const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
+    new URL(formattedUrl);
     return true;
   } catch (error) {
     return false;
   }
 }
-
 function extractHeadings($) {
   const headings = {};
   for (let i = 1; i <= 6; i++) {
