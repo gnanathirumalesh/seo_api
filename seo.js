@@ -455,12 +455,22 @@ function isValidUrl(url) {
   try {
     // Add "https://" if missing
     const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
-    new URL(formattedUrl);
-    return true;
+    const urlObject = new URL(formattedUrl);
+
+    // Check if the hostname is 'www.webdevmonk.com' and has a valid path
+    const isValidDomain = urlObject.hostname === 'www.webdevmonk.com';
+    const hasValidPath = /^\/tutorials\/[a-zA-Z0-9-]+\/?(.html)?$/.test(urlObject.pathname);
+
+    if (isValidDomain && hasValidPath) {
+      return true;
+    } else {
+      return false;
+    }
   } catch (error) {
     return false;
   }
 }
+
 function extractHeadings($) {
   const headings = {};
   for (let i = 1; i <= 6; i++) {
