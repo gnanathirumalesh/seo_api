@@ -374,6 +374,9 @@ app.get('/scrape', async (req, res) => {
     const pageTitle = $('title').text();
     const titleLength = pageTitle.length;
 
+    const seoScore = calculateSeoScore(titleLength, descriptionLength, headings, images, internalLinks, externalLinks, canonicalTag, ogTags, isGoogleAnalyticsPresent, isSchemaMarkupPresent, isHTTPS);
+
+
     const metaDescription = $('meta[name="description"]').attr('content') || '';
     const descriptionLength = metaDescription.length;
 
@@ -527,7 +530,8 @@ app.get('/scrape', async (req, res) => {
         total_para: totalParagraphs
       },
       social_media_links,
-      is_https: isHTTPS
+      is_https: isHTTPS,
+      seo_score: seoScore
     });
   } catch (error) {
     console.error(error);
@@ -554,6 +558,56 @@ function extractSchemaCode($) {
     return JSON.parse(schemaElement.html());
   }
   return null;
+}
+
+function calculateSeoScore(titleLength, descriptionLength, headings, images, internalLinks, externalLinks, canonicalTag, ogTags, isGoogleAnalyticsPresent, isSchemaMarkupPresent, isHTTPS) {
+  // Assign weights to each factor based on importance
+  const weights = {
+    title: 5,
+    description: 3,
+    headings: 5,
+    images: 3,
+    internalLinks: 3,
+    externalLinks: 3,
+    canonicalTag: 2,
+    ogTags: 4,
+    isGoogleAnalyticsPresent: 2,
+    isSchemaMarkupPresent: 4,
+    isHTTPS: 2
+    // Add more factors and weights as needed
+  };
+
+  // Calculate individual scores for each factor
+  const titleScore = titleLength > 0 ? weights.title : 0;
+  const descriptionScore = descriptionLength > 0 ? weights.description : 0;
+  const headingsScore = calculateHeadingsScore(headings) * weights.headings;
+  const imagesScore = images.total > 0 ? weights.images : 0;
+  const internalLinksScore = internalLinks.length > 0 ? weights.internalLinks : 0;
+  const externalLinksScore = externalLinks.length > 0 ? weights.externalLinks : 0;
+  const canonicalTagScore = canonicalTag.is_canonical ? weights.canonicalTag : 0;
+  const ogTagsScore = ogTags.is_present ? weights.ogTags : 0;
+  const isGoogleAnalyticsScore = isGoogleAnalyticsPresent ? weights.isGoogleAnalyticsPresent : 0;
+  const isSchemaMarkupScore = isSchemaMarkupPresent ? weights.isSchemaMarkupPresent : 0;
+  const isHTTPSScore = isHTTPS ? weights.isHTTPS : 0;
+
+  // Calculate total SEO score
+  const totalScore = titleScore + descriptionScore + headingsScore + imagesScore + internalLinksScore + externalLinksScore +
+    canonicalTagScore + ogTagsScore + isGoogleAnalyticsScore + isSchemaMarkupScore + isHTTPSScore;
+
+  return totalScore;
+}
+
+// Function to calculate the score for headings
+function calculateHeadingsScore(headings) {
+  let score = 0;
+
+  for (const level in headings) {
+    if (headings[level].is_present) {
+      score += headings[level].total;
+    }
+  }
+
+  return score;
 }
 
 const port = process.env.PORT || 3000;
