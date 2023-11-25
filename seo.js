@@ -457,9 +457,9 @@ function isValidUrl(url) {
     const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
     const urlObject = new URL(formattedUrl);
 
-    // Check if the hostname is 'www.webdevmonk.com' and has a valid path
-    const isValidDomain = urlObject.hostname === 'www.webdevmonk.com';
-    const hasValidPath = /^\/tutorials\/[a-zA-Z0-9-]+\/?(.html)?$/.test(urlObject.pathname);
+    // Check if the hostname is present and has a valid path
+    const isValidDomain = !!urlObject.hostname;
+    const hasValidPath = /^(\/[a-zA-Z0-9-]+)*\/?$/.test(urlObject.pathname);
 
     if (isValidDomain && hasValidPath) {
       return true;
@@ -470,6 +470,7 @@ function isValidUrl(url) {
     return false;
   }
 }
+
 
 function extractHeadings($) {
   const headings = {};
