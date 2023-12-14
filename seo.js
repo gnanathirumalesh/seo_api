@@ -242,7 +242,7 @@ function analyzeCommonWords(textContent) {
 
   return {
     common_words_total: sortedCommonWords.length,
-    list: sortedCommonWords.slice(0, 20),
+    list: sortedCommonWords.slice(0, 30),
   };
 }
 
