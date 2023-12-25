@@ -86,7 +86,8 @@ app.get('/scrape', async (req, res) => {
       social_media_links: socialMediaLinks,
       is_https: isHTTPS,
       common_words: commonWords,
-      security: security
+      security: security,
+      pageContent: { length: pageContent.length, data: pageContent }
     });
   } catch (error) {
     console.error(error);
