@@ -33,7 +33,7 @@ app.get('/scrape', async (req, res) => {
     const images = extractImages($);
 
     // Extract keywords from the page content
-    const pageTextContent = text();
+    const pageContent = $('body').text();
     const keywords = extractKeywords(pageContent, 5); // Extract the top 5 keywords
 
     // Extract internal and external links
